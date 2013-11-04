@@ -53,7 +53,10 @@ int main(int argc, char* argv[])
 		XMPlatformUtils::Initialize();
 	}
 	catch (const XMLException& toCatch) {
-		cout << "Failed to initialise Xerces XML engine." << endl
+		cout << "Failed to initialise Xerces XML engine." << endl;
+		char *message = XMLString::transcode(toCatch.getMessage());
+		cout << message << endl;
+		XMString::release(&message);
 		return 1;
 	}
 
