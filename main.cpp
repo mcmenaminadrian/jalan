@@ -6,18 +6,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>
-#include "lackeymlfile.hpp"
-
 
 using namespace std;
 using namespace xercesc;
 
-
-
+#include "lackeymlfile.hpp"
 
 void usage()
 {
@@ -42,8 +40,6 @@ int main(int argc, char* argv[])
 	bool readDataFile = false;
 	bool mapThreads = false;
 	LackeymlFile *rawFile = NULL;
-	ProcessedFile *cookedFile = NULL;
-	SAX2XMLReader* saxParser = NULL;
 
 	for (int i = 1; i < argc; i++)
 	{
@@ -82,21 +78,22 @@ int main(int argc, char* argv[])
 		}
 	}
 	try {
-		XMPlatformUtils::Initialize();
+		XMLPlatformUtils::Initialize();
 	}
 	catch (const XMLException& toCatch) {
 		cout << "Failed to initialise Xerces XML engine." << endl;
 		char *message = XMLString::transcode(toCatch.getMessage());
 		cout << message << endl;
-		XMString::release(&message);
+		XMLString::release(&message);
 		return 1;
 	}
 
 	// Got this far - so we have we been tasked with something?
-	if (readXMLFile)
+	if (readXMLFile) {
 		rawFile = new LackeymlFile(xmlFile);
-	if (readDataFile)
-		cookedFile = new ProcessedFile(dataFile);
+		if (mapThreads)
+			rawFile->countThreads();
+	}
 		
 
 	XMLPlatformUtils::Terminate();

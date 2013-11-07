@@ -1,15 +1,16 @@
 //Copyright Adrian McMenamin <acm538@york.ac.uk>, 2013
 
+#include <iostream>
+#include <string>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-#include <iostream>
-#include "lackeymlfile.hpp"
-
 using namespace std;
 using namespace xercesc;
+
+#include "lackeymlfile.hpp"
 
 class ThreadCountHandler: public DefaultHandler
 {

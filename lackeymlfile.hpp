@@ -3,7 +3,8 @@
 class LackeymlFile
 {
 	string xmlFile;
+	
 	public:
-	LackeymlFile(const string fileName) {xmlFile = fileName;}
+	LackeymlFile(const string& fileName) {xmlFile = fileName;}
 	int countThreads() const;
-}
+};
