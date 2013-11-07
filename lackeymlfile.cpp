@@ -38,6 +38,15 @@ class ThreadCountHandler: public DefaultHandler
 		}
 		XMLString::release(&temp);
 	} 
+
+	void fatalError(const SAXParseException& exception)
+	{
+		char* message = XMLString::transcode(exception.getMessage());
+		cout << "Fatal Error: " << message
+			 << " at line: " << exception.getLineNumber()
+			 << endl;
+		XMLString::release(&message);
+	}
 };
 
 
@@ -47,8 +56,11 @@ int LackeymlFile::countThreads() const
 	//initialise SAX2 parser
         SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
 	parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
-	parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);   // optional
+	//parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);   // optional
 
 	ThreadCountHandler* countHandler = new ThreadCountHandler();
 	parser->setContentHandler(countHandler);
-	parser->setErrorHandler(defaultHandler);
+	parser->setErrorHandler(countHandler);
+
+	return 0;
+}
