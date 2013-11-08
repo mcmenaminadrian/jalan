@@ -4,7 +4,7 @@ class LackeymlFile
 {
 	string xmlFile;
 	
-	public:
+public:
 	LackeymlFile(const string& fileName) {xmlFile = fileName;}
 	int countThreads() const;
 };

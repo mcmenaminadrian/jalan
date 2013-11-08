@@ -14,15 +14,21 @@ using namespace xercesc;
 
 class ThreadCountHandler: public DefaultHandler
 {
-	private:
 	int count;
 	int switches;
 	int current;
+	long int threadbitmap;
 
-	public:
-	ThreadCountHandler(){count = 0; switches = 0; current = 0;}
+public:
+	ThreadCountHandler(){
+		count = 0;
+		switches = 0;
+		current = 0;
+		threadbitmap = 0;
+	}
+
 	void startElement(const XMLCh* const uri, const XMLCh* const localname,
-		const XMLCh* const qname, const Attributes attrs) {
+		const XMLCh* const qname, const Attributes& attrs) {
 		char* temp = XMLString::transcode(localname);
 		if (strcmp(temp, "thread") == 0) {
 			char* threadID = XMLString::transcode(attrs.getvalue("tid"));
@@ -31,8 +37,10 @@ class ThreadCountHandler: public DefaultHandler
 				current = tid;
 				cout << "Now made " << ++switches << "thread switches and in thread ";
 				cout << current;
-				if (tid > count)
+				if (threadbitmap & (1 << (tid - 1))) {
 					count++;
+					threadbitmap = threadbitmap | (1 << (tid - 1));
+				}
 				cout << " of " << count << " threads." << endl;
 			}
 			XMLString::release(&threadID);
@@ -63,5 +71,30 @@ int LackeymlFile::countThreads() const
 	parser->setContentHandler(countHandler);
 	parser->setErrorHandler(countHandler);
 
+        try {
+            parser->parse(xmlFile);
+        }
+        catch (const XMLException& toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout << "Exception message is: \n"
+                 << message << "\n";
+            XMLString::release(&message);
+            return -1;
+        }
+        catch (const SAXParseException& toCatch) {
+            char* message = XMLString::transcode(toCatch.getMessage());
+            cout << "Exception message is: \n"
+                 << message << "\n";
+            XMLString::release(&message);
+            return -1;
+        }
+        catch (...) {
+            cout << "Unexpected Exception \n" ;
+            return -1;
+        }
+
+        delete parser;
+        delete countHandler;
+        return 0;
 	return 0;
 }
