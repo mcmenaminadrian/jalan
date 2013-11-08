@@ -5,6 +5,7 @@
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>
+#include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 using namespace std;
@@ -31,7 +32,7 @@ public:
 		const XMLCh* const qname, const Attributes& attrs) {
 		char* temp = XMLString::transcode(localname);
 		if (strcmp(temp, "thread") == 0) {
-			char* threadID = XMLString::transcode(attrs.getvalue("tid"));
+			char* threadID = XMLString::transcode(attrs.getValue("tid"));
 			long int tid = strtol(threadID, &threadID, 16); //hex
 			if (tid != current) {
 				current = tid;
