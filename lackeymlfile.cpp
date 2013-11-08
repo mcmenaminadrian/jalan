@@ -32,15 +32,20 @@ public:
 		const XMLCh* const qname, const Attributes& attrs) {
 		char* temp = XMLString::transcode(localname);
 		if (strcmp(temp, "thread") == 0) {
-			char* threadID = XMLString::transcode(attrs.getValue("tid"));
+			
+			char* threadID = XMLString::transcode(
+					attrs.getValue(XMLString::transcode("")
+					, XMLString::transcode("tid")));
 			long int tid = strtol(threadID, &threadID, 16); //hex
 			if (tid != current) {
 				current = tid;
-				cout << "Now made " << ++switches << "thread switches and in thread ";
+				cout << "Now made " << ++switches 
+					<< "thread switches and in thread ";
 				cout << current;
 				if (threadbitmap & (1 << (tid - 1))) {
 					count++;
-					threadbitmap = threadbitmap | (1 << (tid - 1));
+					threadbitmap = threadbitmap | 
+						(1 << (tid - 1));
 				}
 				cout << " of " << count << " threads." << endl;
 			}
@@ -73,7 +78,7 @@ int LackeymlFile::countThreads() const
 	parser->setErrorHandler(countHandler);
 
         try {
-            parser->parse(xmlFile);
+            parser->parse(xmlFile.c_str());
         }
         catch (const XMLException& toCatch) {
             char* message = XMLString::transcode(toCatch.getMessage());
