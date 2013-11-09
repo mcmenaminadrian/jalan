@@ -56,7 +56,7 @@ public:
 				}
 				cout << " of " << count << " threads." << endl;
 			}
-			XMLString::release(&threadID);
+			//XMLString::release(&threadID);
 		}
 		XMLString::release(&temp);
 	} 
