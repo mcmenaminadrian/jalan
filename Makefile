@@ -1,4 +1,11 @@
+CXX=g++
+XERCESC=/n/staffstore/adrianm/xercesinstall
+CFLAGS=-O2 -I$(XERCESC)/include -Wall
+RPATH=-rpath $(XERCESC)/lib
+
+LDFLAGS=-Wl,$(RPATH) $(XERCESC)/lib/libxerces-c.so 
+
 all: jalan
 
 jalan: main.cpp lackeymlfile.cpp lackeymlfile.hpp
-	g++ -O2 -o jalan -I/usr/local/pkg/xerces-c-3.1.1-x86_64-1/include -Wall main.cpp lackeymlfile.cpp -lxerces-c
+	$(CXX) $(CFLAGS) $(LDFLAGS) -o jalan main.cpp lackeymlfile.cpp
