@@ -21,15 +21,18 @@ class ThreadCountHandler: public DefaultHandler
 	long int threadbitmap;
 	XMLCh* emptyStr;
 	XMLCh* tidStr;
-
+	XMLCh* sizeStr;
+	int instructionCount;
 public:
 	ThreadCountHandler(){
 		count = 0;
 		switches = 0;
 		current = 0;
 		threadbitmap = 0;
+		instructionCount = 0;	
 		emptyStr = XMLString::transcode("");
 		tidStr = XMLString::transcode("tid");
+		sizeStr = XMLString::transcode("size");
 	}
 
 	~ThreadCountHandler() {
@@ -45,6 +48,8 @@ public:
 				attrs.getValue(emptyStr, tidStr));
 			long int tid = strtol(threadID, &threadID, 16); //hex
 			if (tid != current) {
+				cout << "Previous thread instance had " << instructionCount << " instruction bytes. ";
+				instructionCount = 0;
 				current = tid;
 				cout << "Now made " << ++switches 
 					<< " thread switches and in thread ";
@@ -58,6 +63,12 @@ public:
 			}
 			//XMLString::release(&threadID);
 		}
+		else if (strcmp(temp, "instruction") == 0) {
+			char* instNumber = XMLString::transcode(
+					attrs.getValue(emptyStr, sizeStr));
+			instructionCount += strtol(instNumber, &instNumber, 16);
+		}
+
 		XMLString::release(&temp);
 	} 
 

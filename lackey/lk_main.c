@@ -229,7 +229,7 @@ static Bool lk_process_cmd_line_option(const HChar* arg)
         VG_(printf)("<!ELEMENT application EMPTY>\n");
         VG_(printf)("<!ATTLIST application command CDATA #REQUIRED>\n");
 	VG_(printf)("<!ELEMENT thread (instruction|store|load|modify)* >\n");
-	VG_(printf)("<!ATTLIST thread address CDATA #REQUIRED>\n");
+	VG_(printf)("<!ATTLIST thread tid CDATA #REQUIRED>\n");
         VG_(printf)("<!ELEMENT instruction EMPTY>\n");
         VG_(printf)("<!ATTLIST instruction address CDATA #REQUIRED>\n");
         VG_(printf)("<!ATTLIST instruction size CDATA #REQUIRED>\n");
