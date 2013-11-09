@@ -19,6 +19,8 @@ class ThreadCountHandler: public DefaultHandler
 	int switches;
 	int current;
 	long int threadbitmap;
+	XMLCh* emptyStr;
+	XMLCh* tidStr;
 
 public:
 	ThreadCountHandler(){
@@ -26,26 +28,31 @@ public:
 		switches = 0;
 		current = 0;
 		threadbitmap = 0;
+		emptyStr = XMLString::transcode("");
+		tidStr = XMLString::transcode("tid");
+	}
+
+	~ThreadCountHandler() {
+		XMLString::release(&emptyStr);
+		XMLString::release(&tidStr);
 	}
 
 	void startElement(const XMLCh* const uri, const XMLCh* const localname,
 		const XMLCh* const qname, const Attributes& attrs) {
 		char* temp = XMLString::transcode(localname);
 		if (strcmp(temp, "thread") == 0) {
-			
 			char* threadID = XMLString::transcode(
-					attrs.getValue(XMLString::transcode("")
-					, XMLString::transcode("tid")));
+				attrs.getValue(emptyStr, tidStr));
 			long int tid = strtol(threadID, &threadID, 16); //hex
 			if (tid != current) {
 				current = tid;
 				cout << "Now made " << ++switches 
-					<< "thread switches and in thread ";
+					<< " thread switches and in thread ";
 				cout << current;
-				if (threadbitmap & (1 << (tid - 1))) {
+				if (!(threadbitmap & 1 << tid - 1)) {
 					count++;
-					threadbitmap = threadbitmap | 
-						(1 << (tid - 1));
+					threadbitmap = threadbitmap |
+						1 << tid - 1;
 				}
 				cout << " of " << count << " threads." << endl;
 			}
