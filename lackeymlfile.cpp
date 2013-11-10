@@ -118,5 +118,4 @@ int LackeymlFile::countThreads() const
         delete parser;
         delete countHandler;
         return 0;
-	return 0;
 }
