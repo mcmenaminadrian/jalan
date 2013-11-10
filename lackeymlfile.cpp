@@ -38,17 +38,18 @@ public:
 	~ThreadCountHandler() {
 		XMLString::release(&emptyStr);
 		XMLString::release(&tidStr);
+		XMLString::release(&sizeStr);
 	}
 
 	void startElement(const XMLCh* const uri, const XMLCh* const localname,
 		const XMLCh* const qname, const Attributes& attrs) {
 		char* temp = XMLString::transcode(localname);
 		if (strcmp(temp, "thread") == 0) {
-			char* threadID = XMLString::transcode(
-				attrs.getValue(emptyStr, tidStr));
-			long int tid = strtol(threadID, &threadID, 16); //hex
+			const XMLCh* value = attrs.getValue(emptyStr, tidStr);
+			char* threadID = XMLString::transcode(value);
+			long int tid = strtol(threadID, NULL, 16); //hex
 			if (tid != current) {
-				cout << "Previous thread instance had " << instructionCount << " instruction bytes. ";
+				cout << "Previous thread instance had " << instructionCount << " instructions. ";
 				instructionCount = 0;
 				current = tid;
 				cout << "Now made " << ++switches 
@@ -61,13 +62,10 @@ public:
 				}
 				cout << " of " << count << " threads." << endl;
 			}
-			//XMLString::release(&threadID);
+			XMLString::release(&threadID);
 		}
-		else if (strcmp(temp, "instruction") == 0) {
-			char* instNumber = XMLString::transcode(
-					attrs.getValue(emptyStr, sizeStr));
-			instructionCount += strtol(instNumber, &instNumber, 16);
-		}
+		else if (strcmp(temp, "instruction") == 0)
+			instructionCount++;
 
 		XMLString::release(&temp);
 	} 
