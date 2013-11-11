@@ -87,6 +87,7 @@ int LackeymlFile::countThreads() const
 	//initialise SAX2 parser
         SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
 	parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+	parser->setFeature(XMLUni::fgXercesContinueAfterFatalError, false);
 	//parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);   // optional
 
 	ThreadCountHandler* countHandler = new ThreadCountHandler();
